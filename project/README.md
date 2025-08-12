@@ -8,6 +8,8 @@
 *  Eu como professor devo conseguir logar no sistema.
 *  Eu como professor devo conseguir logar no sistema.
 *  Eu como secretário devo conseguir logar no sistema.
+*  Eu como sistema de cobrança devo ser notificado após a matrícula para efetuar a cobrança.
+
 
 
 
