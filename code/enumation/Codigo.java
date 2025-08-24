@@ -2,7 +2,7 @@ package enumation;
 
 public enum Codigo {
     OK_200("OK"),
-    ERRO_404("NOTFOUND");
+    ERRO_404("NOT_FOUND");
 
     private final String mensagem;
 

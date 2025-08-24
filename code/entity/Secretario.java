@@ -4,7 +4,7 @@ import enumation.Codigo;
 
 import java.util.List;
 
-public class Secretario {
+public class Secretario extends Usuario {
     public String gerarCurriculoSemestral() {
         //TODO
         return null;

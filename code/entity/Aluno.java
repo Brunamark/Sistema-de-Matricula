@@ -4,7 +4,10 @@ import enumation.Codigo;
 
 import java.util.List;
 
-public class Aluno {
+public class Aluno extends Usuario {
+    private Curso curso;
+    private List<Disciplina> disciplinas;
+
     public static final int QUANTIDADE_MAXIMA_DISCIPLINA_OBRIGATORIA = 2;
     public static final int QUANTIDADE_MAXIMA_DISCIPLINA_OPTATIVA = 2;
 
