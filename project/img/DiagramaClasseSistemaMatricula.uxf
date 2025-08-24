@@ -1,0 +1,89 @@
+<diagram program="umletino" version="15.1"><zoom_level>4</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>336</x><y>108</y><w>160</w><h>76</h></coordinates><panel_attributes>/AbstractClass/
+Usuário
+--
+- id: Long
+- email: String
+- senha: String 
+- nome: String
+--
+
++ efetuarLogin(email: String, senha String): boolean
++ listarDisciplinas(): List&lt;Disciplina&gt;
++ buscarDisciplinaPorNome(nome: String): Disciplina
++ buscarDisciplinasPorNomeCurso(nome: String): List&lt;Disciplina&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>168</x><y>236</y><w>136</w><h>124</h></coordinates><panel_attributes>Secretario
+--
+-
+
++ gerarCurriculoSemestral(): String
++ criarDisciplina(disciplina: Disciplina): String
++ editarDisciplina(disciplina: Disciplina): String
++ excluirDisciplinaPorNome(nome: String): Codigo
++ criarProfessor(professor: Professor): String
++ editarProfessor(professor: Professor): String
++ excluirProfessorPorNome(nome: String): Codigo
++ listarProfessores(): List&lt;Professor&gt;
++ buscarProfessorPorNome(nome: String): Professor
++ criarAluno(aluno: Aluno): String
++ editarAluno(aluno: Aluno): String
++ excluirAlunoPorNome(nome: String): Codigo
++ listarAlunos(): List&lt;Aluno&gt;
++ buscarAlunoPorNome(nome: String): Aluno</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>384</y><w>84</w><h>48</h></coordinates><panel_attributes>&lt;&lt;Enum&gt;&gt;
+Cursos
+--
+
++ ENGENHARIA_DE_SOFTWARE
++ CIENCIA_DA_COMPUTACAO
++ ENGENHARIA_DA_COMPUTACAO
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>96</x><y>148</y><w>84</w><h>48</h></coordinates><panel_attributes>&lt;&lt;Enum&gt;&gt;
+Codigo
+--
+
++ 200
++ 404
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>520</x><y>240</y><w>188</w><h>76</h></coordinates><panel_attributes>Aluno
+--
+_-QUANTIDADE_MAXIMA_DISCIPLINA_OBRIGATORIA: int = 2_
+_-QUANTIDADE_MAXIMA_DISCIPLINA_OPTATIVA: int = 2_
+
+--
++ matricularDisciplinasObrigatorias(disciplina: List&lt;Disciplina&gt;): Codigo
++ matricularDisciplinasOptativas(disciplina: List&lt;Disciplina&gt;): Codigo
++ verificarAtributosDoCurso(): Curso
++ cancelarMatricula(): Codigo</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>324</x><y>240</y><w>188</w><h>76</h></coordinates><panel_attributes>Professor
+--
+-
+
++ verificarAlunosMatriculadosPorDisciplina(nomeDisciplina: String): List&lt;Aluno&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>296</x><y>396</y><w>160</w><h>76</h></coordinates><panel_attributes>Disciplina
+--
+- id: Long
+- nome: String
+- quantidadeCreditos: int
+- cursos: List&lt;Curso&gt;
+- isOptativa: boolean
+- isAtiva: boolean
+- professor: Professor
+_-QUANTIDADE_MAXIMA_ALUNO: int = 60_
+_-QUANTIDADE_MINIMA_ALUNO: int = 3_
+--
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>372</x><y>312</y><w>64</w><h>92</h></coordinates><panel_attributes>lt=-
+m1=0...n
+m2=0...1
+</panel_attributes><additional_attributes>120;10;120;140;10;140;10;210</additional_attributes></element><element><id>Relation</id><coordinates><x>452</x><y>312</y><w>136</w><h>128</h></coordinates><panel_attributes>lt=-
+m1=0...n
+m2=0...n
+</panel_attributes><additional_attributes>300;10;300;290;10;290</additional_attributes></element><element><id>UMLClass</id><coordinates><x>124</x><y>392</y><w>108</w><h>68</h></coordinates><panel_attributes>Curso
+--
+id: Long
+nome: Cursos
+credito: Int</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>228</x><y>404</y><w>76</w><h>20</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1...n
+m2=0...n
+</panel_attributes><additional_attributes>10;20;170;20</additional_attributes></element><element><id>Relation</id><coordinates><x>228</x><y>180</y><w>196</w><h>64</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>470;10;470;90;10;90;10;140</additional_attributes></element><element><id>Relation</id><coordinates><x>412</x><y>212</y><w>12</w><h>36</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>412</x><y>208</y><w>212</w><h>40</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;20;510;20;510;80</additional_attributes></element><element><id>Relation</id><coordinates><x>80</x><y>404</y><w>52</w><h>20</h></coordinates><panel_attributes>
+</panel_attributes><additional_attributes>10;20;110;20</additional_attributes></element><element><id>Relation</id><coordinates><x>128</x><y>192</y><w>48</w><h>100</h></coordinates><panel_attributes>
+</panel_attributes><additional_attributes>10;10;10;230;100;230</additional_attributes></element><element><id>Relation</id><coordinates><x>176</x><y>80</y><w>480</w><h>168</h></coordinates><panel_attributes>
+</panel_attributes><additional_attributes>10;230;210;230;210;20;1180;20;1180;400</additional_attributes></element><element><id>Relation</id><coordinates><x>172</x><y>312</y><w>496</w><h>224</h></coordinates><panel_attributes>lt=-
+m1=0...n
+m2=1
+</panel_attributes><additional_attributes>1200;10;1200;540;10;540;10;370</additional_attributes></element></diagram>
