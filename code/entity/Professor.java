@@ -5,7 +5,6 @@ import java.util.List;
 public class Professor extends Usuario {
     private Disciplina disciplina;
 
-    // Construtores
     public Professor() {
         super();
     }
@@ -15,7 +14,6 @@ public class Professor extends Usuario {
         this.disciplina = disciplina;
     }
 
-    // Getters and Setters
     public Disciplina getDisciplina() {
         return disciplina;
     }
