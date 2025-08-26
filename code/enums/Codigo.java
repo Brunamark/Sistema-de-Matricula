@@ -1,4 +1,4 @@
-package enumation;
+package enums;
 
 public enum Codigo {
     OK_200("OK"),

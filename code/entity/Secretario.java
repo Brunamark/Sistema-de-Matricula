@@ -1,6 +1,6 @@
 package entity;
 
-import enumation.Codigo;
+import enums.Codigo;
 
 import java.util.List;
 

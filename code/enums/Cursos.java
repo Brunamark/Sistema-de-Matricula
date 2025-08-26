@@ -1,4 +1,4 @@
-package enumation;
+package enums;
 
 public enum Cursos {
     ENGENHARIA_DE_SOFTWARE("Engenharia de Software"),

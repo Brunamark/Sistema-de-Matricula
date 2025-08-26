@@ -1,6 +1,6 @@
 package entity;
 
-import enumation.Cursos;
+import enums.Cursos;
 
 import java.util.List;
 
