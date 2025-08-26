@@ -12,5 +12,5 @@ public class Disciplina {
     private boolean isOptativa;
     private boolean isAtiva;
     private List<Aluno> alunos;
-    private List<Professor> professores;
+    private Professor professor;
 }
