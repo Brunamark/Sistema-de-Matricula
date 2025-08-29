@@ -14,17 +14,17 @@ Usuário
 --
 -
 
-+ gerarCurriculoSemestral(): String
-+ criarDisciplina(disciplina: Disciplina): String
-+ editarDisciplina(disciplina: Disciplina): String
++ gerarCurriculoSemestral(): Codigo
++ criarDisciplina(disciplina: Disciplina): Codigo
++ editarDisciplina(disciplina: Disciplina): Codigo
 + excluirDisciplinaPorNome(nome: String): Codigo
-+ criarProfessor(professor: Professor): String
-+ editarProfessor(professor: Professor): String
++ criarProfessor(professor: Professor): Codigo
++ editarProfessor(professor: Professor): Codigo
 + excluirProfessorPorNome(nome: String): Codigo
 + listarProfessores(): List&lt;Professor&gt;
 + buscarProfessorPorNome(nome: String): Professor
-+ criarAluno(aluno: Aluno): String
-+ editarAluno(aluno: Aluno): String
++ criarAluno(aluno: Aluno): Codigo
++ editarAluno(aluno: Aluno): Codigo
 + excluirAlunoPorNome(nome: String): Codigo
 + listarAlunos(): List&lt;Aluno&gt;
 + buscarAlunoPorNome(nome: String): Aluno</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>760</y><w>210</w><h>120</h></coordinates><panel_attributes>&lt;&lt;Enum&gt;&gt;
