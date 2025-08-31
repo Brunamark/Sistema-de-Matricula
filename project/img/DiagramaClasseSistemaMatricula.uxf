@@ -1,4 +1,4 @@
-<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>840</x><y>70</y><w>400</w><h>190</h></coordinates><panel_attributes>/AbstractClass/
+<diagram program="umletino" version="15.1"><zoom_level>8</zoom_level><help_text>Space for diagram notes_</help_text><element><id>UMLClass</id><coordinates><x>672</x><y>56</y><w>320</w><h>152</h></coordinates><panel_attributes>/AbstractClass/
 Usuário
 --
 - id: Long
@@ -7,14 +7,12 @@ Usuário
 - nome: String
 --
 
-+ efetuarLogin(email: String, senha String): boolean
-+ listarDisciplinas(): List&lt;Disciplina&gt;
-+ buscarDisciplinaPorNome(nome: String): Disciplina
-+ buscarDisciplinasPorNomeCurso(nome: String): List&lt;Disciplina&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>420</x><y>390</y><w>340</w><h>310</h></coordinates><panel_attributes>Secretario
++ efetuarLogin(email: String, senha String): Usuario
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>312</x><y>312</y><w>312</w><h>320</h></coordinates><panel_attributes>Secretario
 --
 -
 
-+ gerarCurriculoSemestral(): Codigo
++ gerarCurriculoSemestral(curso: Curso): String
 + criarDisciplina(disciplina: Disciplina): Codigo
 + editarDisciplina(disciplina: Disciplina): Codigo
 + excluirDisciplinaPorNome(nome: String): Codigo
@@ -25,22 +23,31 @@ Usuário
 + buscarProfessorPorNome(nome: String): Professor
 + criarAluno(aluno: Aluno): Codigo
 + editarAluno(aluno: Aluno): Codigo
-+ excluirAlunoPorNome(nome: String): Codigo
++ excluirAlunoPorEmail(nome: String): Codigo
++ excluirAlunoPorId(id: long): Codigo
 + listarAlunos(): List&lt;Aluno&gt;
-+ buscarAlunoPorNome(nome: String): Aluno</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>760</y><w>210</w><h>120</h></coordinates><panel_attributes>&lt;&lt;Enum&gt;&gt;
++ buscarAlunoPorNome(nome: String): Aluno
++ buscarAlunoPorId(id: Long): Aluno
++ buscarDisciplinaPorId(id: Long): Disciplina
++ buscarProfessorPorId(id: Long): Professor
++ listarAlunosCurso(curso: Curso): List&lt;Aluno&gt;
++ listarDisciplinas(): List&lt;Disciplina&gt;
++ buscarDisciplinaPorNome(nome: String): Disciplina
++ buscarDisciplinasPorNomeCurso(nome: String): List&lt;Disciplina&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>672</y><w>168</w><h>96</h></coordinates><panel_attributes>&lt;&lt;Enum&gt;&gt;
 Cursos
 --
 
 + ENGENHARIA_DE_SOFTWARE
 + CIENCIA_DA_COMPUTACAO
 + ENGENHARIA_DA_COMPUTACAO
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>240</x><y>170</y><w>210</w><h>120</h></coordinates><panel_attributes>&lt;&lt;Enum&gt;&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>192</x><y>136</y><w>168</w><h>96</h></coordinates><panel_attributes>&lt;&lt;Enum&gt;&gt;
 Codigo
 --
 
 + 200
 + 404
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1300</x><y>400</y><w>470</w><h>190</h></coordinates><panel_attributes>Aluno
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1040</x><y>320</y><w>376</w><h>152</h></coordinates><panel_attributes>Aluno
 --
 _-QUANTIDADE_MAXIMA_DISCIPLINA_OBRIGATORIA: int = 2_
 _-QUANTIDADE_MAXIMA_DISCIPLINA_OPTATIVA: int = 2_
@@ -49,12 +56,12 @@ _-QUANTIDADE_MAXIMA_DISCIPLINA_OPTATIVA: int = 2_
 + matricularDisciplinasObrigatorias(disciplina: List&lt;Disciplina&gt;): Codigo
 + matricularDisciplinasOptativas(disciplina: List&lt;Disciplina&gt;): Codigo
 + verificarAtributosDoCurso(): Curso
-+ cancelarMatricula(): Codigo</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>810</x><y>400</y><w>470</w><h>190</h></coordinates><panel_attributes>Professor
++ cancelarMatricula(): Codigo</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>648</x><y>320</y><w>376</w><h>152</h></coordinates><panel_attributes>Professor
 --
 -
 
 + verificarAlunosMatriculadosPorDisciplina(nomeDisciplina: String): List&lt;Aluno&gt;
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>740</x><y>790</y><w>400</w><h>190</h></coordinates><panel_attributes>Disciplina
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>592</x><y>696</y><w>320</w><h>200</h></coordinates><panel_attributes>Disciplina
 --
 - id: Long
 - nome: String
@@ -65,25 +72,29 @@ _-QUANTIDADE_MAXIMA_DISCIPLINA_OPTATIVA: int = 2_
 - professor: Professor
 _-QUANTIDADE_MAXIMA_ALUNO: int = 60_
 _-QUANTIDADE_MINIMA_ALUNO: int = 3_
---
+_-CREDITOS_MINIMO: int=1_
+_-CREDITOS_MAXIMO: int=12_
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>930</x><y>580</y><w>160</w><h>230</h></coordinates><panel_attributes>lt=-
+--
++ buscarAlunoPorId(): Aluno
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>744</x><y>464</y><w>128</w><h>248</h></coordinates><panel_attributes>lt=-
 m1=0...1
 m2=0...1
-</panel_attributes><additional_attributes>120;10;120;140;10;140;10;210</additional_attributes></element><element><id>Relation</id><coordinates><x>1130</x><y>580</y><w>340</w><h>320</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>120;10;120;140;10;140;10;290</additional_attributes></element><element><id>Relation</id><coordinates><x>904</x><y>464</y><w>272</w><h>320</h></coordinates><panel_attributes>lt=-
 m1=0...n
 m2=0...n
-</panel_attributes><additional_attributes>300;10;300;290;10;290</additional_attributes></element><element><id>UMLClass</id><coordinates><x>310</x><y>780</y><w>270</w><h>170</h></coordinates><panel_attributes>Curso
+</panel_attributes><additional_attributes>300;10;300;370;10;370</additional_attributes></element><element><id>UMLClass</id><coordinates><x>248</x><y>688</y><w>216</w><h>136</h></coordinates><panel_attributes>Curso
 --
 id: Long
 nome: Cursos
-credito: Int</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>570</x><y>810</y><w>190</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+credito: Int</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>456</x><y>712</y><w>152</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
 m1=1...n
 m2=0...n
-</panel_attributes><additional_attributes>10;20;170;20</additional_attributes></element><element><id>Relation</id><coordinates><x>570</x><y>250</y><w>490</w><h>160</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>470;10;470;90;10;90;10;140</additional_attributes></element><element><id>Relation</id><coordinates><x>1030</x><y>330</y><w>30</w><h>90</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>1030</x><y>320</y><w>530</w><h>100</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;20;510;20;510;80</additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>810</y><w>130</w><h>50</h></coordinates><panel_attributes>
-</panel_attributes><additional_attributes>10;20;110;20</additional_attributes></element><element><id>Relation</id><coordinates><x>320</x><y>280</y><w>120</w><h>250</h></coordinates><panel_attributes>
-</panel_attributes><additional_attributes>10;10;10;230;100;230</additional_attributes></element><element><id>Relation</id><coordinates><x>440</x><y>0</y><w>1200</w><h>420</h></coordinates><panel_attributes>
-</panel_attributes><additional_attributes>10;230;210;230;210;20;1180;20;1180;400</additional_attributes></element><element><id>Relation</id><coordinates><x>430</x><y>580</y><w>1240</w><h>560</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>10;20;170;20</additional_attributes></element><element><id>Relation</id><coordinates><x>456</x><y>200</y><w>392</w><h>128</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>470;10;470;90;10;90;10;140</additional_attributes></element><element><id>Relation</id><coordinates><x>824</x><y>264</y><w>24</w><h>72</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>824</x><y>256</y><w>424</w><h>80</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;20;510;20;510;80</additional_attributes></element><element><id>Relation</id><coordinates><x>160</x><y>712</y><w>104</w><h>40</h></coordinates><panel_attributes>
+</panel_attributes><additional_attributes>10;20;110;20</additional_attributes></element><element><id>Relation</id><coordinates><x>256</x><y>224</y><w>72</w><h>200</h></coordinates><panel_attributes>
+</panel_attributes><additional_attributes>10;10;10;230;70;230</additional_attributes></element><element><id>Relation</id><coordinates><x>352</x><y>0</y><w>960</w><h>336</h></coordinates><panel_attributes>
+</panel_attributes><additional_attributes>10;230;210;230;210;20;1180;20;1180;400</additional_attributes></element><element><id>Relation</id><coordinates><x>344</x><y>464</y><w>992</w><h>504</h></coordinates><panel_attributes>lt=-
 m1=0...n
 m2=1
-</panel_attributes><additional_attributes>1200;10;1200;540;10;540;10;370</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes>1200;10;1200;610;10;610;10;450</additional_attributes></element></diagram>

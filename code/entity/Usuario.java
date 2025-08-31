@@ -50,26 +50,13 @@ public abstract class Usuario {
         this.nome = nome;
     }
 
-    // Métodos
-    public boolean efetuarLogin(String email, String senha) {
-        if(this.email.equals(email) && this.senha.equals(senha)) {
-            return true;
+    public Usuario efetuarLogin(String email, String senha) {
+        if(email == null || senha == null) {
+            return null;
         }
-        return false;
-    }
-
-    public List<Disciplina> listarDisciplinas() {
-
-        return null;
-    }
-
-    public Disciplina buscarDisciplinaPorNome(String nome) {
-        //TODO
-        return null;
-    }
-
-    public List<Disciplina> buscarDisciplinasPorNomeCurso(String nome) {
-        //TODO
+        if(this.email.equals(email) && this.senha.equals(senha)) {
+            return this;
+        }
         return null;
     }
 }
