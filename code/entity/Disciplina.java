@@ -20,19 +20,7 @@ public class Disciplina {
     private List<Aluno> alunos;
     private Professor professor;
 
-    public Disciplina() {
-    }
-
-    public Disciplina(Long id, String nome, int quantidadeCreditos, List<Curso> cursos,
-            boolean isOptativa, boolean isAtiva, List<Aluno> alunos, Professor professor) {
-        this.id = id;
-        this.nome = nome;
-        this.quantidadeCreditos = quantidadeCreditos;
-        this.cursos = cursos;
-        this.isOptativa = isOptativa;
-        this.isAtiva = isAtiva;
-        this.alunos = alunos;
-        this.professor = professor;
+    private Disciplina() {
     }
 
     private Disciplina(Builder builder) {

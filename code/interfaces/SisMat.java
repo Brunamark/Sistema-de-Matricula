@@ -44,6 +44,7 @@ public interface SisMat {
     // === CURSO ===
     ResultadoOperacao buscarCursoPorId(Long id, Long idUsuario);
     ResultadoOperacao listarAlunosCurso(Long cursoId, Long idUsuario);
+    ResultadoOperacao buscarCursoPorNome(String nome);
 
     // === SECRETÁRIO ===
     ResultadoOperacao buscarSecretarioPorId(Long id);

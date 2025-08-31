@@ -13,7 +13,7 @@ public class Aluno extends Usuario {
     public static final int QUANTIDADE_MAXIMA_DISCIPLINA_OBRIGATORIA = 2;
     public static final int QUANTIDADE_MAXIMA_DISCIPLINA_OPTATIVA = 2;
 
-    public Aluno() {
+    private Aluno() {
         super();
         this.disciplinas = new ArrayList<>();
     }

@@ -1,6 +1,7 @@
 package service;
 
 import entity.Aluno;
+import entity.Curso;
 import entity.Professor;
 import entity.Secretario;
 import entity.Usuario;
@@ -40,6 +41,9 @@ public class UsuarioUtil {
     public static Secretario buscarSecretarioPorId(Long id) {
        return null; // TODO: Implementar com repository
     }
-    
+
+    public static Curso buscarCursoPorNome(String nome) {
+        return null; // TODO: Implementar com repository
+    }
 
 }

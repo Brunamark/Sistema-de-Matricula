@@ -7,13 +7,8 @@ import exceptions.ExceptionHandler;
 public class Professor extends Usuario {
     private Disciplina disciplina;
 
-    public Professor() {
+    private Professor() {
         super();
-    }
-
-    public Professor(Long id, String email, String senha, String nome, Disciplina disciplina) {
-        super(id, email, senha, nome);
-        this.disciplina = disciplina;
     }
 
     private Professor(Builder builder) {

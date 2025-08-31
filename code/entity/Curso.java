@@ -1,6 +1,5 @@
 package entity;
 
-import enums.Codigo;
 import enums.Cursos;
 import exceptions.ExceptionHandler;
 
@@ -14,17 +13,9 @@ public class Curso {
     private List<Disciplina> disciplinas;
     private List<Aluno> alunos;
 
-    public Curso() {
+    private Curso() {
         this.disciplinas = new ArrayList<>();
         this.alunos = new ArrayList<>();
-    }
-
-    public Curso(Long id, Cursos nome, int credito, List<Disciplina> disciplinas, List<Aluno> alunos) {
-        this.id = id;
-        this.nome = nome;
-        this.credito = credito;
-        this.disciplinas = disciplinas != null ? disciplinas : new ArrayList<>();
-        this.alunos = alunos != null ? alunos : new ArrayList<>();
     }
 
     private Curso(Builder builder) {

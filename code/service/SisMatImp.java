@@ -579,4 +579,15 @@ public class SisMatImp implements SisMat {
         return handler.erroInterno("Erro ao gerar currículo semestral");
     }
 
+    @Override
+    public ResultadoOperacao buscarCursoPorNome(String nome) {
+        ExceptionHandler handler = new ExceptionHandler();
+
+        Curso curso = UsuarioUtil.buscarCursoPorNome(nome);
+        if (curso != null) {
+            return handler.sucesso("Curso encontrado", curso);
+        }
+        return handler.erroInterno("Erro ao buscar curso");
+    }
+
 }

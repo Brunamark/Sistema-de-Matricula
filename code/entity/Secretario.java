@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class Secretario extends Usuario {
     Curso curso;
 
-    public Secretario() {
+    private Secretario() {
         super();
     }
 
@@ -74,16 +74,6 @@ public class Secretario extends Usuario {
         if (disciplinaExistente != null) {
             return Codigo.DISCIPLINA_JA_EXISTE_406;
         }
-
-        Disciplina novaDisciplina = new Disciplina(
-                disciplina.getId(),
-                disciplina.getNome(),
-                disciplina.getQuantidadeCreditos(),
-                disciplina.getCursos(),
-                disciplina.isOptativa(),
-                disciplina.isAtiva(),
-                disciplina.getAlunos(),
-                disciplina.getProfessor());
 
         return Codigo.DISCIPLINA_CRIADA_201;
     }
@@ -154,14 +144,7 @@ public class Secretario extends Usuario {
         if (professorExistente != null) {
             return Codigo.PROFESSOR_JA_EXISTE_406;
         }
-
-        Professor novoProfessor = new Professor(
-                professor.getId(),
-                professor.getEmail(),
-                professor.getSenha(),
-                professor.getNome(),
-                professor.getDisciplina());
-
+ //repository
         return Codigo.PROFESSOR_CRIADO_201;
     }
 
