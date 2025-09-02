@@ -32,7 +32,7 @@ public interface SisMat {
     ResultadoOperacao matricularDisciplinasObrigatorias(List<String> nomesDisciplinas, Long alunoId);
     ResultadoOperacao matricularDisciplinasOptativas(List<String> nomesDisciplinas, Long alunoId);
     ResultadoOperacao verificarAtributosDoCurso(Long alunoId);
-    ResultadoOperacao cancelarMatricula(Long alunoId);
+    ResultadoOperacao cancelarMatricula(Long alunoId, Long disciplinaId);
     ResultadoOperacao criarAluno(String nome, String email, String senha, Curso curso, Long idUsuario);
     ResultadoOperacao editarAluno(Long id, String nome, String email, String senha, Curso curso, Long idUsuario);
     ResultadoOperacao excluirAluno(Long id, Long idUsuario);

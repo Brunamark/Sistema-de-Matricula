@@ -50,13 +50,4 @@ public abstract class Usuario {
         this.nome = nome;
     }
 
-    public Usuario efetuarLogin(String email, String senha) {
-        if(email == null || senha == null) {
-            return null;
-        }
-        if(this.email.equals(email) && this.senha.equals(senha)) {
-            return this;
-        }
-        return null;
-    }
 }

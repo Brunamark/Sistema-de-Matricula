@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DisciplinaRepository {
     
-    private static final String ARQUIVO_DISCIPLINAS = "file/disciplinas.txt";
+    private static final String ARQUIVO_DISCIPLINAS = System.getProperty("user.dir") + "/code/file/disciplinas.txt";
     private static final String SEPARADOR = ";";
     
     public boolean salvar(Disciplina disciplina) {
@@ -213,11 +213,183 @@ public class DisciplinaRepository {
         }
     }
     
+    public boolean salvarTodas(List<Disciplina> disciplinas) {
+        if (disciplinas == null || disciplinas.isEmpty()) {
+            return false;
+        }
+        
+        try {
+            criarDiretorioSeNaoExistir();
+            
+            List<Disciplina> disciplinasExistentes = listarTodos();
+            
+            // Remover disciplinas que serão atualizadas
+            for (Disciplina novaDisciplina : disciplinas) {
+                disciplinasExistentes.removeIf(d -> d.getId().equals(novaDisciplina.getId()));
+            }
+            
+            // Adicionar as novas disciplinas
+            disciplinasExistentes.addAll(disciplinas);
+            
+            salvarTodos(disciplinasExistentes);
+            
+            return true;
+            
+        } catch (Exception e) {
+            System.err.println("Erro ao salvar lista de disciplinas: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean salvarDisciplinasObrigatorias(List<Disciplina> disciplinasObrigatorias) {
+        if (disciplinasObrigatorias == null || disciplinasObrigatorias.isEmpty()) {
+            return false;
+        }
+        
+        // Verificar se todas são obrigatórias
+        boolean todasObrigatorias = disciplinasObrigatorias.stream()
+                .allMatch(d -> !d.isOptativa());
+        
+        if (!todasObrigatorias) {
+            System.err.println("Erro: Lista contém disciplinas optativas!");
+            return false;
+        }
+        
+        return salvarTodas(disciplinasObrigatorias);
+    }
+    
+    public boolean salvarDisciplinasOptativas(List<Disciplina> disciplinasOptativas) {
+        if (disciplinasOptativas == null || disciplinasOptativas.isEmpty()) {
+            return false;
+        }
+        
+        // Verificar se todas são optativas
+        boolean todasOptativas = disciplinasOptativas.stream()
+                .allMatch(Disciplina::isOptativa);
+        
+        if (!todasOptativas) {
+            System.err.println("Erro: Lista contém disciplinas obrigatórias!");
+            return false;
+        }
+        
+        return salvarTodas(disciplinasOptativas);
+    }
+    
+    public boolean salvarDisciplinasPorTipo(List<Disciplina> obrigatorias, List<Disciplina> optativas) {
+        try {
+            boolean sucessoObrigatorias = true;
+            boolean sucessoOptativas = true;
+            
+            if (obrigatorias != null && !obrigatorias.isEmpty()) {
+                sucessoObrigatorias = salvarDisciplinasObrigatorias(obrigatorias);
+            }
+            
+            if (optativas != null && !optativas.isEmpty()) {
+                sucessoOptativas = salvarDisciplinasOptativas(optativas);
+            }
+            
+            return sucessoObrigatorias && sucessoOptativas;
+            
+        } catch (Exception e) {
+            System.err.println("Erro ao salvar disciplinas por tipo: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean adicionarDisciplinas(List<Disciplina> novasDisciplinas) {
+        if (novasDisciplinas == null || novasDisciplinas.isEmpty()) {
+            return false;
+        }
+        
+        try {
+            // Gerar IDs para disciplinas sem ID
+            for (Disciplina disciplina : novasDisciplinas) {
+                if (disciplina.getId() == null) {
+                    disciplina.setId(gerarProximoId());
+                }
+            }
+            
+            return salvarTodas(novasDisciplinas);
+            
+        } catch (Exception e) {
+            System.err.println("Erro ao adicionar disciplinas: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean substituirTodasDisciplinas(List<Disciplina> novasDisciplinas) {
+        try {
+            // Limpar arquivo existente
+            limparArquivo();
+            
+            // Salvar as novas disciplinas
+            if (novasDisciplinas != null && !novasDisciplinas.isEmpty()) {
+                salvarTodos(novasDisciplinas);
+            }
+            
+            return true;
+            
+        } catch (Exception e) {
+            System.err.println("Erro ao substituir todas as disciplinas: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public int salvarDisciplinasComValidacao(List<Disciplina> disciplinas) {
+        if (disciplinas == null || disciplinas.isEmpty()) {
+            return 0;
+        }
+        
+        int salvas = 0;
+        
+        for (Disciplina disciplina : disciplinas) {
+            try {
+                // Validações básicas
+                if (disciplina.getNome() == null || disciplina.getNome().trim().isEmpty()) {
+                    System.err.println("Disciplina sem nome ignorada: " + disciplina.getId());
+                    continue;
+                }
+                
+                if (disciplina.getQuantidadeCreditos() < Disciplina.CREDITOS_MINIMO || 
+                    disciplina.getQuantidadeCreditos() > Disciplina.CREDITOS_MAXIMO) {
+                    System.err.println("Disciplina com créditos inválidos ignorada: " + disciplina.getNome());
+                    continue;
+                }
+                
+                // Salvar disciplina individual
+                if (salvar(disciplina)) {
+                    salvas++;
+                }
+                
+            } catch (Exception e) {
+                System.err.println("Erro ao salvar disciplina " + disciplina.getNome() + ": " + e.getMessage());
+            }
+        }
+        
+        return salvas;
+    }
+    
+    // Método auxiliar para separar disciplinas por tipo
+    public void separarDisciplinasPorTipo(List<Disciplina> disciplinas, 
+                                         List<Disciplina> obrigatorias, 
+                                         List<Disciplina> optativas) {
+        if (disciplinas == null) return;
+        
+        for (Disciplina disciplina : disciplinas) {
+            if (disciplina.isOptativa()) {
+                optativas.add(disciplina);
+            } else {
+                obrigatorias.add(disciplina);
+            }
+        }
+    }
+    
+    // Correção no método criarDiretorioSeNaoExistir (estava "src" em vez de "file")
     private void criarDiretorioSeNaoExistir() {
         try {
-            Files.createDirectories(Paths.get("src"));
+            Files.createDirectories(Paths.get("file"));
         } catch (IOException e) {
-            System.err.println("Erro ao criar diretório src: " + e.getMessage());
+            System.err.println("Erro ao criar diretório file: " + e.getMessage());
         }
     }
     
@@ -497,6 +669,17 @@ public class DisciplinaRepository {
     }
     
     public List<Disciplina> buscarDisciplinasPorNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) return new ArrayList<>();
+        
+        List<Disciplina> disciplinas = listarTodos();
+        
+        return disciplinas.stream()
+                .filter(d -> d.getNome() != null && 
+                           d.getNome().toLowerCase().contains(nome.toLowerCase()))
+                .toList();
+    }
+    
+    public List<Disciplina> buscarDisciplinasPorNomeParcial(String nome) {
         if (nome == null || nome.trim().isEmpty()) return new ArrayList<>();
         
         List<Disciplina> disciplinas = listarTodos();

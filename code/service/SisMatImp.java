@@ -366,7 +366,8 @@ public class SisMatImp implements SisMat {
             return handler.alunoNaoEncontrado("Aluno não encontrado");
         }
 
-        Curso cursoVerificado = aluno.verificarAtributosDoCurso();
+        Long cursoId = aluno.getCurso().getId();
+        Curso cursoVerificado = aluno.verificarAtributosDoCurso(cursoId);
         if (cursoVerificado != null) {
             return handler.sucesso("Atributos do curso verificados com sucesso", cursoVerificado);
         }
@@ -374,14 +375,14 @@ public class SisMatImp implements SisMat {
     }
 
     @Override
-    public ResultadoOperacao cancelarMatricula(Long alunoId) {
+    public ResultadoOperacao cancelarMatricula(Long alunoId, Long disciplinaId) {
         ExceptionHandler handler = new ExceptionHandler();
 
         if (!buscarAlunoPorId(alunoId, alunoId).isSucesso()) {
             return handler.alunoNaoEncontrado("Aluno não encontrado");
         }
 
-        aluno.cancelarMatricula();
+        aluno.cancelarMatricula(disciplinaId, alunoId);
         return handler.sucesso("Matrícula cancelada com sucesso", null);
     }
 
@@ -551,12 +552,19 @@ public class SisMatImp implements SisMat {
             return handler.campoObrigatorio("senha");
         }
 
-        Usuario usuario = UsuarioUtil.buscarUsuarioPorEmail(email);
-        if (usuario == null || !usuario.getSenha().equals(senha)) {
-            return handler.credenciaisInvalidas();
+        Usuario usuarioLogado = UsuarioUtil.efetuarLogin(email, senha);
+
+        if (usuarioLogado instanceof Aluno) {
+            this.aluno = (Aluno) usuarioLogado;
         }
 
-        Usuario usuarioLogado = usuario.efetuarLogin(email, senha);
+        if (usuarioLogado instanceof Secretario) {
+            this.secretario = (Secretario) usuarioLogado;
+        }
+
+        if (usuarioLogado instanceof Professor) {
+            this.professor = (Professor) usuarioLogado;
+        }
 
         if (usuarioLogado != null) {
             return handler.loginSucesso(usuarioLogado);

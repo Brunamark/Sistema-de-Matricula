@@ -3,6 +3,7 @@ package entity;
 import java.util.List;
 import enums.Codigo;
 import exceptions.ExceptionHandler;
+import repository.AlunoRepository;
 
 public class Disciplina {
     public static final int QUANTIDADE_MAXIMA_ALUNO = 60;

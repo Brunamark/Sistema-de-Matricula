@@ -3,9 +3,11 @@ package entity;
 import java.util.List;
 
 import exceptions.ExceptionHandler;
+import repository.DisciplinaRepository;
 
 public class Professor extends Usuario {
     private Disciplina disciplina;
+    private DisciplinaRepository disciplinaRepository = new DisciplinaRepository();
 
     private Professor() {
         super();
@@ -77,7 +79,10 @@ public class Professor extends Usuario {
     }
 
     public List<Aluno> verificarAlunosMatriculadosPorDisciplina(String nomeDisciplina) {
-        //TODO
+        Disciplina disciplina = disciplinaRepository.buscarPorNome(nomeDisciplina);
+        if (disciplina != null) {
+            return disciplina.getAlunos();
+        }
         return null;
     }
 }
