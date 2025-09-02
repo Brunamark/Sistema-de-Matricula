@@ -13,7 +13,8 @@ import java.util.List;
 
 public class CursoRepository {
     
-    private static final String ARQUIVO_CURSOS = System.getProperty("user.dir") + "/codefile/cursos.txt";
+    private static final String ARQUIVO_CURSOS = System.getProperty("user.dir") + "/code/file/cursos.txt";
+
     private static final String SEPARADOR = ";";
     
     public boolean salvar(Curso curso) {
