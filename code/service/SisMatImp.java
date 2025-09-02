@@ -552,12 +552,7 @@ public class SisMatImp implements SisMat {
             return handler.campoObrigatorio("senha");
         }
 
-        Usuario usuario = UsuarioUtil.buscarUsuarioPorEmail(email);
-        if (usuario == null || !usuario.getSenha().equals(senha)) {
-            return handler.credenciaisInvalidas();
-        }
-
-        Usuario usuarioLogado = usuario.efetuarLogin(email, senha);
+        Usuario usuarioLogado = UsuarioUtil.efetuarLogin(email, senha);
 
         if (usuarioLogado != null) {
             return handler.loginSucesso(usuarioLogado);
