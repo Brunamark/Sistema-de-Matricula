@@ -554,6 +554,7 @@ public class SisMatImp implements SisMat {
 
         Usuario usuarioLogado = UsuarioUtil.efetuarLogin(email, senha);
 
+
         if (usuarioLogado instanceof Aluno) {
             this.aluno = (Aluno) usuarioLogado;
         }
@@ -565,6 +566,7 @@ public class SisMatImp implements SisMat {
         if (usuarioLogado instanceof Professor) {
             this.professor = (Professor) usuarioLogado;
         }
+
 
         if (usuarioLogado != null) {
             return handler.loginSucesso(usuarioLogado);
