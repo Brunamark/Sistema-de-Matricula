@@ -1,7 +1,11 @@
 package entity;
 
 import enums.Codigo;
+import enums.Cursos;
 import exceptions.ExceptionHandler;
+import repository.AlunoRepository;
+import repository.CursoRepository;
+import repository.DisciplinaRepository;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -17,6 +21,10 @@ public class Aluno extends Usuario {
     public static final int QUANTIDADE_MAXIMA_DISCIPLINA_OPTATIVA = 2;
     public static final int LIMITE_CREDITOS_POR_SEMESTRE = 24;
     public static final int CREDITOS_MINIMOS_PARA_GRADUACAO = 240;
+
+    public static DisciplinaRepository disciplinaRepository = new DisciplinaRepository();
+    public static CursoRepository cursoRepository = new CursoRepository();
+    public static AlunoRepository alunoRepository = new AlunoRepository();
 
     private Aluno() {
         super();
@@ -85,7 +93,7 @@ public class Aluno extends Usuario {
         if (disciplinas == null || disciplinas.isEmpty()) {
             return 0;
         }
-        
+
         return disciplinas.stream()
                 .mapToInt(Disciplina::getQuantidadeCreditos)
                 .sum();
@@ -95,7 +103,7 @@ public class Aluno extends Usuario {
         if (disciplinas == null || disciplinas.isEmpty()) {
             return 0;
         }
-        
+
         return disciplinas.stream()
                 .filter(d -> !d.isOptativa())
                 .mapToInt(Disciplina::getQuantidadeCreditos)
@@ -106,7 +114,7 @@ public class Aluno extends Usuario {
         if (disciplinas == null || disciplinas.isEmpty()) {
             return 0;
         }
-        
+
         return disciplinas.stream()
                 .filter(Disciplina::isOptativa)
                 .mapToInt(Disciplina::getQuantidadeCreditos)
@@ -123,8 +131,9 @@ public class Aluno extends Usuario {
     }
 
     public boolean podeMatricular(Disciplina disciplina) {
-        if (disciplina == null) return false;
-        
+        if (disciplina == null)
+            return false;
+
         int creditosComNova = calcularCreditosAtuais() + disciplina.getQuantidadeCreditos();
         return creditosComNova <= LIMITE_CREDITOS_POR_SEMESTRE;
     }
@@ -138,14 +147,15 @@ public class Aluno extends Usuario {
     }
 
     public void completarDisciplina(Disciplina disciplina) {
-        if (disciplina == null) return;
-        
+        if (disciplina == null)
+            return;
+
         if (disciplina.isOptativa()) {
             creditosOptativosCompletos += disciplina.getQuantidadeCreditos();
         } else {
             creditosObrigatoriosCompletos += disciplina.getQuantidadeCreditos();
         }
-        
+
         if (disciplinas != null) {
             disciplinas.removeIf(d -> d.getId().equals(disciplina.getId()));
             recalcularCreditos();
@@ -239,7 +249,7 @@ public class Aluno extends Usuario {
             }
 
             Aluno aluno = new Aluno(this);
-            aluno.recalcularCreditos(); 
+            aluno.recalcularCreditos();
             return aluno;
         }
     }
@@ -265,6 +275,8 @@ public class Aluno extends Usuario {
         if (calcularCreditosAtuais() + creditosNovos > LIMITE_CREDITOS_POR_SEMESTRE) {
             return Codigo.DISCIPLINA_LOTADA_409;
         }
+
+        disciplinaRepository.salvarTodas(disciplinas);
 
         this.disciplinas.addAll(disciplinas);
         recalcularCreditos();
@@ -293,23 +305,31 @@ public class Aluno extends Usuario {
             return Codigo.DISCIPLINA_LOTADA_409;
         }
 
+        disciplinaRepository.salvarTodas(disciplinas);
+
         this.disciplinas.addAll(disciplinas);
         recalcularCreditos();
 
         return Codigo.DISCIPLINA_CRIADA_201;
     }
 
-    public Curso verificarAtributosDoCurso() {
-        return this.curso;
+    public Curso verificarAtributosDoCurso(Long id) {
+        if (curso == null) {
+            return null;
+        }
+
+        return cursoRepository.buscarPorId(id);
     }
 
-    public Codigo cancelarMatricula() {
+    public Codigo cancelarMatricula(Long disciplinaId, Long idAluno) {
         if (disciplinas == null || disciplinas.isEmpty()) {
             return Codigo.DISCIPLINA_NAO_ENCONTRADA_404;
         }
 
+        alunoRepository.cancelarMatriculaDisciplina(idAluno, disciplinaId);
         disciplinas.clear();
         recalcularCreditos();
+    
 
         return Codigo.OK_200;
     }
@@ -320,22 +340,24 @@ public class Aluno extends Usuario {
         sb.append("=== RELATÓRIO DE CRÉDITOS ===\n");
         sb.append("Aluno: ").append(getNome()).append("\n");
         sb.append("Curso: ").append(curso != null ? curso.getNome().getNomeCurso() : "Não definido").append("\n\n");
-        
+
         sb.append("CRÉDITOS ATUAIS:\n");
         sb.append("- Obrigatórios: ").append(calcularCreditosObrigatoriosAtuais()).append("\n");
         sb.append("- Optativos: ").append(calcularCreditosOptativosAtuais()).append("\n");
-        sb.append("- Total atual: ").append(calcularCreditosAtuais()).append("/").append(LIMITE_CREDITOS_POR_SEMESTRE).append("\n\n");
-        
+        sb.append("- Total atual: ").append(calcularCreditosAtuais()).append("/").append(LIMITE_CREDITOS_POR_SEMESTRE)
+                .append("\n\n");
+
         sb.append("CRÉDITOS COMPLETOS:\n");
         sb.append("- Obrigatórios: ").append(creditosObrigatoriosCompletos).append("\n");
         sb.append("- Optativos: ").append(creditosOptativosCompletos).append("\n");
-        sb.append("- Total completo: ").append(calcularTotalCreditosCompletos()).append("/").append(CREDITOS_MINIMOS_PARA_GRADUACAO).append("\n\n");
-        
+        sb.append("- Total completo: ").append(calcularTotalCreditosCompletos()).append("/")
+                .append(CREDITOS_MINIMOS_PARA_GRADUACAO).append("\n\n");
+
         sb.append("PROGRESSO:\n");
         sb.append("- Créditos restantes: ").append(calcularCreditosRestantes()).append("\n");
         sb.append("- Progresso: ").append(String.format("%.1f", getProgressoGraduacao())).append("%\n");
         sb.append("- Pode graduar: ").append(podeGraduar() ? "SIM" : "NÃO").append("\n");
-        
+
         return sb.toString();
     }
 }

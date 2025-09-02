@@ -381,4 +381,141 @@ public class AlunoRepository {
                            a.getCurso().getNome().equals(cursoEnum))
                 .toList();
     }
+    
+    public boolean cancelarMatricula(Long alunoId) {
+        if (alunoId == null) return false;
+        
+        Aluno aluno = buscarPorId(alunoId);
+        if (aluno == null) return false;
+        
+        // Verificar se tem disciplinas para cancelar
+        if (aluno.getDisciplinas() == null || aluno.getDisciplinas().isEmpty()) {
+            return false;
+        }
+        
+        // Limpar todas as disciplinas do aluno
+        aluno.getDisciplinas().clear();
+        
+        // Recalcular créditos se o método existir
+        if (aluno instanceof Aluno) {
+            aluno.recalcularCreditos();
+        }
+        
+        // Salvar aluno atualizado
+        return salvar(aluno);
+    }
+
+    public boolean cancelarMatriculaDisciplina(Long alunoId, Long disciplinaId) {
+        if (alunoId == null || disciplinaId == null) return false;
+        
+        Aluno aluno = buscarPorId(alunoId);
+        if (aluno == null || aluno.getDisciplinas() == null) return false;
+        
+        // Verificar se está matriculado na disciplina
+        if (!estaMatriculadoEmDisciplina(alunoId, disciplinaId)) {
+            return false;
+        }
+        
+        // Remover disciplina específica
+        boolean removido = aluno.getDisciplinas().removeIf(d -> d.getId().equals(disciplinaId));
+        
+        if (removido) {
+            // Recalcular créditos
+            aluno.recalcularCreditos();
+            
+            // Salvar aluno atualizado
+            return salvar(aluno);
+        }
+        
+        return false;
+    }
+
+    public boolean cancelarMatriculaMultiplas(Long alunoId, List<Long> disciplinasIds) {
+        if (alunoId == null || disciplinasIds == null || disciplinasIds.isEmpty()) {
+            return false;
+        }
+        
+        Aluno aluno = buscarPorId(alunoId);
+        if (aluno == null || aluno.getDisciplinas() == null) return false;
+        
+        int canceladas = 0;
+        
+        for (Long disciplinaId : disciplinasIds) {
+            if (cancelarMatriculaDisciplina(alunoId, disciplinaId)) {
+                canceladas++;
+            }
+        }
+        
+        return canceladas > 0;
+    }
+
+    public int contarMatriculas(Long alunoId) {
+        if (alunoId == null) return 0;
+        
+        Aluno aluno = buscarPorId(alunoId);
+        if (aluno == null || aluno.getDisciplinas() == null) return 0;
+        
+        return aluno.getDisciplinas().size();
+    }
+
+    public List<Disciplina> listarDisciplinasMatriculadas(Long alunoId) {
+        if (alunoId == null) return new ArrayList<>();
+        
+        Aluno aluno = buscarPorId(alunoId);
+        if (aluno == null || aluno.getDisciplinas() == null) return new ArrayList<>();
+        
+        return new ArrayList<>(aluno.getDisciplinas());
+    }
+
+    public boolean temMatriculas(Long alunoId) {
+        return contarMatriculas(alunoId) > 0;
+    }
+
+    public boolean podeMatricular(Long alunoId, Disciplina disciplina) {
+        if (alunoId == null || disciplina == null) return false;
+        
+        Aluno aluno = buscarPorId(alunoId);
+        if (aluno == null) return false;
+        
+        // Verificar se já está matriculado
+        if (estaMatriculadoEmDisciplina(alunoId, disciplina.getId())) {
+            return false;
+        }
+        
+        // Usar método do aluno se disponível
+        return aluno.podeMatricular(disciplina);
+    }
+
+    public boolean matricularAluno(Long alunoId, Disciplina disciplina) {
+        if (!podeMatricular(alunoId, disciplina)) {
+            return false;
+        }
+        
+        return adicionarDisciplina(alunoId, disciplina);
+    }
+
+    public boolean transferirAluno(Long alunoId, Long novoCursoId) {
+        if (alunoId == null || novoCursoId == null) return false;
+        
+        Aluno aluno = buscarPorId(alunoId);
+        if (aluno == null) return false;
+        
+        // Cancelar todas as matrículas atuais
+        boolean cancelou = cancelarMatricula(alunoId);
+        if (!cancelou && temMatriculas(alunoId)) {
+            return false; // Se tinha matrículas e não conseguiu cancelar
+        }
+        
+        // TODO: Buscar novo curso no CursoRepository quando estiver disponível
+        // Por enquanto, criar curso básico
+        Curso novoCurso = Curso.builder()
+                .id(novoCursoId)
+                .nome(Cursos.ENGENHARIA_DE_SOFTWARE) // Valor padrão
+                .credito(240)
+                .build();
+        
+        aluno.setCurso(novoCurso);
+        
+        return salvar(aluno);
+    }
 }
