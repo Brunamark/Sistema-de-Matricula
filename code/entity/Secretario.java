@@ -2,19 +2,31 @@ package entity;
 
 import enums.Codigo;
 import exceptions.ExceptionHandler;
+import repository.AlunoRepository;
+import repository.CursoRepository;
+import repository.DisciplinaRepository;
+import repository.ProfessorRepository;
+import repository.SecretarioRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Secretario extends Usuario {
-    Curso curso;
+    private Curso curso;
 
+    private static AlunoRepository alunoRepository = new AlunoRepository();
+    private static ProfessorRepository professorRepository = new ProfessorRepository();
+    private static DisciplinaRepository disciplinaRepository = new DisciplinaRepository();
+    private static CursoRepository cursoRepository = new CursoRepository();
+    
     private Secretario() {
         super();
     }
 
     private Secretario(Builder builder) {
         super(builder.id, builder.email, builder.senha, builder.nome);
+        this.curso = builder.curso;
     }
 
     public static Builder builder() {
@@ -26,6 +38,7 @@ public class Secretario extends Usuario {
         private String email;
         private String senha;
         private String nome;
+        private Curso curso;
 
         public Builder id(Long id) {
             this.id = id;
@@ -47,6 +60,11 @@ public class Secretario extends Usuario {
             return this;
         }
 
+        public Builder curso(Curso curso) {
+            this.curso = curso;
+            return this;
+        }
+
         public Secretario build() {
             ExceptionHandler handler = new ExceptionHandler();
             if (nome == null || nome.trim().isEmpty()) {
@@ -63,6 +81,14 @@ public class Secretario extends Usuario {
         }
     }
 
+    public Curso getCurso() {
+        return curso;
+    }
+
+    public void setCurso(Curso curso) {
+        this.curso = curso;
+    }
+
     public String gerarCurriculoSemestral(Curso curso) {
         // TODO:
         return "Currículo semestral gerado com sucesso";
@@ -74,7 +100,9 @@ public class Secretario extends Usuario {
         if (disciplinaExistente != null) {
             return Codigo.DISCIPLINA_JA_EXISTE_406;
         }
-
+        
+        disciplinaRepository.salvar(disciplina);
+         
         return Codigo.DISCIPLINA_CRIADA_201;
     }
 
@@ -85,29 +113,17 @@ public class Secretario extends Usuario {
             return Codigo.DISCIPLINA_NAO_ENCONTRADA_404;
         }
 
-        disciplinaExistente.setNome(disciplina.getNome());
-        disciplinaExistente.setQuantidadeCreditos(disciplina.getQuantidadeCreditos());
-        disciplinaExistente.setCursos(disciplina.getCursos());
-        disciplinaExistente.setOptativa(disciplina.isOptativa());
-        disciplinaExistente.setAtiva(disciplina.isAtiva());
-        disciplinaExistente.setAlunos(disciplina.getAlunos());
-        disciplinaExistente.setProfessor(disciplina.getProfessor());
-
-        // chamar repository para salvar
+        disciplinaRepository.salvar(disciplina);
 
         return Codigo.ATUALIZADO_202;
     }
 
     public Disciplina buscarDisciplinaPorId(Long id) {
-        List<Disciplina> disciplinas = curso.getDisciplinas();
-        Disciplina disciplina = disciplinas.stream().filter(d -> d.getId().equals(id)).findFirst().orElse(null);
-
-        if (disciplina == null) {
+        if (curso == null || curso.getDisciplinas() == null) {
             return null;
         }
-        // chama repository
 
-        return disciplina;
+        return disciplinaRepository.buscarPorId(id);
     }
 
     public Codigo excluirDisciplinaPorNome(String nome) {
@@ -117,25 +133,24 @@ public class Secretario extends Usuario {
             return Codigo.DISCIPLINA_NAO_ENCONTRADA_404;
         }
 
-        // TODO: Implementar lógica de exclusão
-
+        disciplinaRepository.excluir(disciplinaExistente.getId());
         return Codigo.EXCLUIDO_204;
     }
 
-    public Disciplina buscarDisciplinaPorNomeDoCurso(String nomeCurso) {
-        List<Disciplina> disciplinas = curso.getDisciplinas();
-        return disciplinas.stream()
-                .filter(d -> d.getCursos().stream().anyMatch(
-                        c -> c != null && c.getNome() != null && c.getNome().toString().equalsIgnoreCase(nomeCurso)))
-                .findFirst()
-                .orElse(null);
+    public List<Disciplina> buscarDisciplinaPorNomeDoCurso(String nomeCurso) {
+        if (curso == null || curso.getDisciplinas() == null) {
+            return null;
+        }
+
+        return disciplinaRepository.buscarPorNomeDoCurso(nomeCurso);
     }
 
     public List<Disciplina> buscarDisciplinasPorNome(String nome) {
-        List<Disciplina> disciplinas = curso.getDisciplinas();
-        return disciplinas.stream()
-                .filter(d -> d.getNome() != null && d.getNome().equalsIgnoreCase(nome))
-                .collect(Collectors.toList());
+        if (curso == null || curso.getDisciplinas() == null) {
+            return null;
+        }
+
+        return disciplinaRepository.buscarDisciplinasPorNome(nome);
     }
 
     public Codigo criarProfessor(Professor professor) {
@@ -144,7 +159,7 @@ public class Secretario extends Usuario {
         if (professorExistente != null) {
             return Codigo.PROFESSOR_JA_EXISTE_406;
         }
- //repository
+        professorRepository.salvar(professor);
         return Codigo.PROFESSOR_CRIADO_201;
     }
 
@@ -155,7 +170,7 @@ public class Secretario extends Usuario {
             return Codigo.PROFESSOR_NAO_ENCONTRADO_404;
         }
 
-        // TODO: Implementar lógica de edição
+        professorRepository.salvar(professor);
 
         return Codigo.ATUALIZADO_202;
     }
@@ -167,14 +182,14 @@ public class Secretario extends Usuario {
             return Codigo.PROFESSOR_NAO_ENCONTRADO_404;
         }
 
-        // TODO: Implementar lógica de exclusão
-
+        professorRepository.excluir(professorExistente.getId());
         return Codigo.EXCLUIDO_204;
     }
 
     public Professor buscarProfessorPorId(Long id) {
-        // TODO: Implementar busca por ID
-        return null;
+        if (id == null) return null;
+
+        return professorRepository.buscarPorId(id);
     }
 
     public Codigo criarAluno(Aluno aluno) {
@@ -184,41 +199,31 @@ public class Secretario extends Usuario {
             return Codigo.ALUNO_JA_EXISTE_406;
         }
 
-        Aluno novoAluno = Aluno.builder()
-                .id(aluno.getId())
-                .email(aluno.getEmail())
-                .senha(aluno.getSenha())
-                .nome(aluno.getNome())
-                .curso(aluno.getCurso())
-                .disciplinas(aluno.getDisciplinas())
-                .build();
+        alunoRepository.salvar(aluno);
 
         return Codigo.ALUNO_CRIADO_201;
     }
 
     public Codigo editarAluno(Aluno aluno) {
-        // TODO: Buscar aluno existente
-        Aluno alunoExistente = null; // buscarAlunoPorEmail(aluno.getEmail());
+        Aluno alunoExistente = buscarAlunoPorEmail(aluno.getEmail());
 
         if (alunoExistente == null) {
             return Codigo.ALUNO_NAO_ENCONTRADO_404;
         }
 
-        // TODO: Implementar lógica de edição
+        alunoRepository.salvar(aluno);
 
         return Codigo.ATUALIZADO_202;
     }
 
     public Codigo excluirAlunoPorEmail(String email) {
-        // TODO: Buscar aluno existente
-        // Aluno alunoExistente = buscarAlunoPorEmail(email);
+        Aluno alunoExistente = buscarAlunoPorEmail(email);
 
-        // if (alunoExistente == null) {
-        // return Codigo.ALUNO_NAO_ENCONTRADO_404;
-        // }
+        if (alunoExistente == null) {
+            return Codigo.ALUNO_NAO_ENCONTRADO_404;
+        }
 
-        // TODO: Implementar lógica de exclusão
-
+        alunoRepository.excluir(alunoExistente.getId());
         return Codigo.EXCLUIDO_204;
     }
 
@@ -229,110 +234,150 @@ public class Secretario extends Usuario {
             return Codigo.ALUNO_NAO_ENCONTRADO_404;
         }
 
-        // TODO: Implementar lógica de exclusão
-
+        alunoRepository.excluir(alunoExistente.getId());
         return Codigo.EXCLUIDO_204;
     }
 
     public Aluno buscarAlunoPorId(Long id) {
-        List<Aluno> alunos = curso.getAlunos();
-        return alunos.stream().filter(a -> a.getId().equals(id)).findFirst().orElse(null);
+        if (curso == null || curso.getAlunos() == null) {
+            return null;
+        }
+
+        return alunoRepository.buscarPorId(id);
     }
 
     public List<Disciplina> listarDisciplinas() {
-        // TODO: Implementar listagem de disciplinas
-        return null;
+        if (curso == null) {
+            return null;
+        }
+        return disciplinaRepository.listarTodos();
     }
 
     public Disciplina buscarDisciplinaPorNome(String nome) {
-        // TODO: Implementar busca por nome
-        return null;
+        if (curso == null || curso.getDisciplinas() == null) {
+            return null;
+        }
+
+       return disciplinaRepository.buscarPorNome(nome);
     }
 
     public List<Disciplina> buscarDisciplinasPorNomeCurso(String nome) {
-        // TODO: Implementar busca por curso
-        return null;
+        if (curso == null) {
+            return null;
+        }
+        return disciplinaRepository.buscarPorNomeDoCurso(nome);
     }
 
     public List<Professor> listarProfessores() {
-        // TODO: Implementar listagem de professores
-        return null;
+        return professorRepository.listarTodos();
     }
 
     public List<Professor> buscarProfessorPorNome(String nome) {
-        // TODO: Implementar busca por nome
-        return null;
+        if (nome == null || nome.trim().isEmpty()) {
+            return null;
+        }
+        return professorRepository.buscarPorNome(nome);
     }
 
     public Professor buscarProfessorPorEmail(String email) {
-        // TODO: Implementar busca por email
-        return null;
+        if (email == null || email.trim().isEmpty()) {
+            return null;
+        }
+        return professorRepository.buscarPorEmail(email);
     }
 
     public List<Aluno> listarAlunos() {
-        // TODO: Implementar listagem de alunos
-        return null;
+        return alunoRepository.listarTodos();
     }
 
     public List<Aluno> buscarAlunoPorNome(String nome) {
-        // TODO: Implementar busca por nome
-        return null;
+        if (nome == null || nome.trim().isEmpty()) {
+            return null;
+        }
+        return alunoRepository.buscarPorNome(nome);
     }
 
     public Aluno buscarAlunoPorEmail(String email) {
-        // TODO: Implementar busca por email
-        return null;
+        if (email == null || email.trim().isEmpty()) {
+            return null;
+        }
+        return alunoRepository.buscarPorEmail(email);
     }
 
     // === MÉTODOS ESPECÍFICOS DE MATRÍCULA ===
 
     public Codigo matricularAluno(Long alunoId, Long disciplinaId) {
-        // TODO: Implementar lógica de matrícula
-        // Verificar se aluno existe
-        // Verificar se disciplina existe
-        // Verificar se já está matriculado
-        // Verificar pré-requisitos
-        // Verificar conflitos de horário
+        Aluno aluno = buscarAlunoPorId(alunoId);
+        Disciplina disciplina = buscarDisciplinaPorId(disciplinaId);
 
+        if (aluno == null) {
+            return Codigo.ALUNO_NAO_ENCONTRADO_404;
+        }
+
+        if (disciplina == null) {
+            return Codigo.DISCIPLINA_NAO_ENCONTRADA_404;
+        }
+
+        if (verificarLimiteCreditos(alunoId, disciplinaId) == Codigo.LIMITE_CREDITOS_EXCEDIDO_422) {
+            return Codigo.LIMITE_CREDITOS_EXCEDIDO_422;
+        }
+
+        disciplina.adicionarAluno(aluno);
         return Codigo.MATRICULA_REALIZADA_201;
     }
 
     public Codigo desmatricularAluno(Long alunoId, Long disciplinaId) {
-        // TODO: Implementar lógica de desmatrícula
+        Aluno aluno = buscarAlunoPorId(alunoId);
+        Disciplina disciplina = buscarDisciplinaPorId(disciplinaId);
 
+        if (aluno == null) {
+            return Codigo.ALUNO_NAO_ENCONTRADO_404;
+        }
+
+        if (disciplina == null) {
+            return Codigo.DISCIPLINA_NAO_ENCONTRADA_404;
+        }
+
+        disciplina.removerAluno(aluno);
         return Codigo.MATRICULA_CANCELADA_200;
     }
 
     public Codigo verificarLimiteCreditos(Long alunoId, Long disciplinaId) {
-        // TODO: Implementar verificação de limite de créditos
+        Aluno aluno = buscarAlunoPorId(alunoId);
+        Disciplina disciplina = buscarDisciplinaPorId(disciplinaId);
 
-        return Codigo.LIMITE_CREDITOS_EXCEDIDO_422;
+        if (aluno == null) {
+            return Codigo.ALUNO_NAO_ENCONTRADO_404;
+        }
+
+        if (disciplina == null) {
+            return Codigo.DISCIPLINA_NAO_ENCONTRADA_404;
+        }
+
+        int creditosAtuais = aluno.calcularCreditosAtuais();
+        int creditosNovos = disciplina.getQuantidadeCreditos();
+        int limiteCreditos = Aluno.LIMITE_CREDITOS_POR_SEMESTRE;
+
+        if (creditosAtuais + creditosNovos > limiteCreditos) {
+            return Codigo.LIMITE_CREDITOS_EXCEDIDO_422;
+        }
+
+        return Codigo.OK_200; 
     }
 
-    public Codigo verificarPreRequisitos(Long alunoId, Long disciplinaId) {
-        // TODO: Implementar verificação de pré-requisitos
 
-        return Codigo.PRE_REQUISITO_NAO_ATENDIDO_422;
-    }
-
-    public Codigo verificarConflitosHorario(Long alunoId, Long disciplinaId) {
-        // TODO: Implementar verificação de conflitos
-
-        return Codigo.HORARIO_CONFLITO_409;
-    }
-
+   
     public List<Aluno> listarAlunosCurso(Curso curso) {
         if (curso == null) {
             return null;
         }
-        return curso.getAlunos();
+        return alunoRepository.listarAlunosPorCurso(curso);
     }
 
     public Curso buscarCursoPorId(Long id) {
         if (id == null) {
             return null;
         }
-        // busca no repository
-        return null;
+        return cursoRepository.buscarPorId(id);
     }
 }

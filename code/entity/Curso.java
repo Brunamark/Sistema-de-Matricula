@@ -12,6 +12,7 @@ public class Curso {
     private int credito;
     private List<Disciplina> disciplinas;
     private List<Aluno> alunos;
+    public static final int LIMITE_DISCIPLINAS_POR_CURSO = 10;
 
     private Curso() {
         this.disciplinas = new ArrayList<>();
@@ -82,6 +83,63 @@ public class Curso {
             this.alunos = new ArrayList<>();
         }
         this.alunos.add(aluno);
+    }
+
+    public List<Aluno> listarAlunosPorCurso() {
+        if (this.alunos == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(this.alunos);
+    }
+
+    public List<Aluno> listarAlunosPorCurso(Long cursoId) {
+        if (this.id != null && this.id.equals(cursoId)) {
+            return listarAlunosPorCurso();
+        }
+        return new ArrayList<>();
+    }
+
+    public int contarAlunosPorCurso() {
+        return this.alunos != null ? this.alunos.size() : 0;
+    }
+
+    public boolean temAlunos() {
+        return this.alunos != null && !this.alunos.isEmpty();
+    }
+
+    public boolean temAluno(Long alunoId) {
+        if (this.alunos == null || alunoId == null) {
+            return false;
+        }
+        return this.alunos.stream()
+                .anyMatch(aluno -> aluno.getId().equals(alunoId));
+    }
+
+    public boolean removerAluno(Long alunoId) {
+        if (this.alunos == null || alunoId == null) {
+            return false;
+        }
+        return this.alunos.removeIf(aluno -> aluno.getId().equals(alunoId));
+    }
+
+    public Aluno buscarAlunoPorId(Long alunoId) {
+        if (this.alunos == null || alunoId == null) {
+            return null;
+        }
+        return this.alunos.stream()
+                .filter(aluno -> aluno.getId().equals(alunoId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<Aluno> buscarAlunosPorNome(String nome) {
+        if (this.alunos == null || nome == null || nome.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        return this.alunos.stream()
+                .filter(aluno -> aluno.getNome() != null && 
+                               aluno.getNome().toLowerCase().contains(nome.toLowerCase()))
+                .toList();
     }
 
     public static class Builder {

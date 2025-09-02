@@ -134,14 +134,14 @@ public class SisMatImp implements SisMat {
     }
 
     @Override
-    public ResultadoOperacao buscarDisciplinaPorNomeDoCurso(String nomeCurso, Long idUsuario) {
+    public ResultadoOperacao buscarDisciplinasPorNomeDoCurso(String nomeCurso, Long idUsuario) {
         ExceptionHandler handler = new ExceptionHandler();
 
         if (!buscarSecretarioPorId(idUsuario).isSucesso()) {
             return handler.acessoNegado("buscar disciplina", "Você não tem permissão para buscar esta disciplina");
         }
 
-        Disciplina disciplina = secretario.buscarDisciplinaPorNomeDoCurso(nomeCurso);
+        List<Disciplina> disciplina = secretario.buscarDisciplinaPorNomeDoCurso(nomeCurso);
         if (disciplina == null) {
             return handler.disciplinaNaoEncontrada("Nome do curso: " + nomeCurso);
         }

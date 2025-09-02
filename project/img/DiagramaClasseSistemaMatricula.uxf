@@ -1,4 +1,4 @@
-<diagram program="umletino" version="15.1"><zoom_level>8</zoom_level><help_text>Space for diagram notes_</help_text><element><id>UMLClass</id><coordinates><x>672</x><y>56</y><w>320</w><h>152</h></coordinates><panel_attributes>/AbstractClass/
+<diagram program="umletino" version="15.1"><zoom_level>8</zoom_level><help_text>Space for diagram notes_ </help_text><element><id>UMLClass</id><coordinates><x>672</x><y>56</y><w>320</w><h>152</h></coordinates><panel_attributes>/AbstractClass/
 Usuário
 --
 - id: Long
@@ -47,10 +47,15 @@ Codigo
 
 + 200
 + 404
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1040</x><y>320</y><w>376</w><h>152</h></coordinates><panel_attributes>Aluno
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1040</x><y>320</y><w>376</w><h>184</h></coordinates><panel_attributes>Aluno
 --
 _-QUANTIDADE_MAXIMA_DISCIPLINA_OBRIGATORIA: int = 2_
 _-QUANTIDADE_MAXIMA_DISCIPLINA_OPTATIVA: int = 2_
+_-LIMITE_CREDITOS_POR_SEMESTRE: int = 24_
+_-QUANTIDADE_MAXIMA_DISCIPLINA_OPTATIVA: int = 240_
+- creditosAtuais: int
+- creditosObrigatoriosCompletos: int
+- creditosOptativosCompletos: int
 
 --
 + matricularDisciplinasObrigatorias(disciplina: List&lt;Disciplina&gt;): Codigo
@@ -70,10 +75,10 @@ _-QUANTIDADE_MAXIMA_DISCIPLINA_OPTATIVA: int = 2_
 - isOptativa: boolean
 - isAtiva: boolean
 - professor: Professor
-_-QUANTIDADE_MAXIMA_ALUNO: int = 60_
-_-QUANTIDADE_MINIMA_ALUNO: int = 3_
-_-CREDITOS_MINIMO: int=1_
-_-CREDITOS_MAXIMO: int=12_
+_+QUANTIDADE_MAXIMA_ALUNO: int = 60_
+_+QUANTIDADE_MINIMA_ALUNO: int = 3_
+_+CREDITOS_MINIMO: int=1_
+_+CREDITOS_MAXIMO: int=12_
 
 --
 + buscarAlunoPorId(): Aluno
@@ -81,10 +86,12 @@ _-CREDITOS_MAXIMO: int=12_
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>744</x><y>464</y><w>128</w><h>248</h></coordinates><panel_attributes>lt=-
 m1=0...1
 m2=0...1
-</panel_attributes><additional_attributes>120;10;120;140;10;140;10;290</additional_attributes></element><element><id>Relation</id><coordinates><x>904</x><y>464</y><w>272</w><h>320</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>120;10;120;140;10;140;10;290</additional_attributes></element><element><id>Relation</id><coordinates><x>904</x><y>496</y><w>272</w><h>288</h></coordinates><panel_attributes>lt=-
 m1=0...n
 m2=0...n
-</panel_attributes><additional_attributes>300;10;300;370;10;370</additional_attributes></element><element><id>UMLClass</id><coordinates><x>248</x><y>688</y><w>216</w><h>136</h></coordinates><panel_attributes>Curso
+</panel_attributes><additional_attributes>300;10;300;330;10;330</additional_attributes></element><element><id>UMLClass</id><coordinates><x>248</x><y>688</y><w>216</w><h>136</h></coordinates><panel_attributes>Curso
+--
+_+LIMITE_DISCIPLINAS_POR_CURSO: int=10_
 --
 id: Long
 nome: Cursos
@@ -94,7 +101,7 @@ m2=0...n
 </panel_attributes><additional_attributes>10;20;170;20</additional_attributes></element><element><id>Relation</id><coordinates><x>456</x><y>200</y><w>392</w><h>128</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>470;10;470;90;10;90;10;140</additional_attributes></element><element><id>Relation</id><coordinates><x>824</x><y>264</y><w>24</w><h>72</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>824</x><y>256</y><w>424</w><h>80</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;20;510;20;510;80</additional_attributes></element><element><id>Relation</id><coordinates><x>160</x><y>712</y><w>104</w><h>40</h></coordinates><panel_attributes>
 </panel_attributes><additional_attributes>10;20;110;20</additional_attributes></element><element><id>Relation</id><coordinates><x>256</x><y>224</y><w>72</w><h>200</h></coordinates><panel_attributes>
 </panel_attributes><additional_attributes>10;10;10;230;70;230</additional_attributes></element><element><id>Relation</id><coordinates><x>352</x><y>0</y><w>960</w><h>336</h></coordinates><panel_attributes>
-</panel_attributes><additional_attributes>10;230;210;230;210;20;1180;20;1180;400</additional_attributes></element><element><id>Relation</id><coordinates><x>344</x><y>464</y><w>992</w><h>504</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>10;230;210;230;210;20;1180;20;1180;400</additional_attributes></element><element><id>Relation</id><coordinates><x>344</x><y>496</y><w>992</w><h>472</h></coordinates><panel_attributes>lt=-
 m1=0...n
 m2=1
-</panel_attributes><additional_attributes>1200;10;1200;610;10;610;10;450</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes>1200;10;1200;570;10;570;10;410</additional_attributes></element></diagram>

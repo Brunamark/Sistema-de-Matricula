@@ -26,6 +26,7 @@ public enum Codigo {
     DISCIPLINA_NAO_ENCONTRADA_404("Disciplina não encontrada"),
     DISCIPLINA_INATIVA_409("Disciplina está inativa"),
     LIMITE_CREDITOS_EXCEDIDO_422("Limite de créditos da disciplina excedido"),
+    DISCIPLINA_LOTADA_409("Disciplina já atingiu o número máximo de alunos"),
     
     PROFESSOR_CRIADO_201("Professor criado com sucesso"),
     PROFESSOR_JA_EXISTE_406("Professor já existe"),

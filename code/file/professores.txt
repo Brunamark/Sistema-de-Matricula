@@ -1,0 +1,3 @@
+1;Dr. João Santos;joao@uni.br;123456;101,102,103
+2;Dra. Maria Silva;maria@uni.br;654321;201,202
+3;Prof. Carlos Lima;carlos@uni.br;789123;

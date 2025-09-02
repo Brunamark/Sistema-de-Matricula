@@ -14,7 +14,7 @@ public interface SisMat {
     ResultadoOperacao excluirDisciplina(String nome, Long idUsuario);
     ResultadoOperacao buscarDisciplinaPorId(Long id, Long idUsuario);
     ResultadoOperacao buscarDisciplinaPorNome(String nome, Long idUsuario);
-    ResultadoOperacao buscarDisciplinaPorNomeDoCurso(String nomeCurso, Long idUsuario);
+    ResultadoOperacao buscarDisciplinasPorNomeDoCurso(String nomeCurso, Long idUsuario);
     ResultadoOperacao listarDisciplinas(Long idUsuario);
     ResultadoOperacao buscarDisciplinasPorNome(String nome, Long idUsuario);
 
